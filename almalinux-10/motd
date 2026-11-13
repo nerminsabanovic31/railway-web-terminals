@@ -1,0 +1,6 @@
+
+  AlmaLinux 10 web terminal
+  Install software:  sudo dnf install -y <package>
+  Your files in this home folder survive restarts and redeploys.
+  tmux keeps your session alive: close the tab and come back any time.
+
