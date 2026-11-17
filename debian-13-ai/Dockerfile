@@ -2,7 +2,7 @@ FROM debian:trixie
 
 ENV TERMINAL_TITLE="Debian 13 (trixie) AI Coding Box"
 ENV ENABLE_SSH=1
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends bash sudo tmux curl wget git vim nano htop less unzip ca-certificates tzdata openssh-server xz-utils python3 python3-pip openssh-client procps iputils-ping dnsutils build-essential && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends bash sudo tmux openssh-server xz-utils curl wget git vim nano htop less unzip ca-certificates tzdata python3 python3-pip openssh-client procps iputils-ping dnsutils build-essential && rm -rf /var/lib/apt/lists/*
 RUN curl -fsSL -o /tmp/node.tar.xz https://nodejs.org/dist/v24.22.3/node-v24.22.3-linux-x64.tar.xz \
  && echo "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb  /tmp/node.tar.xz" | sha256sum -c - \
  && tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 && rm /tmp/node.tar.xz \

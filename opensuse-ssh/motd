@@ -1,0 +1,7 @@
+
+  openSUSE Tumbleweed web terminal
+  Install software:  sudo zypper install <package>
+  Your files in this home folder survive restarts and redeploys.
+  tmux keeps your session alive: close the tab and come back any time.
+  Over SSH, run  tmux attach -t main  to join the browser session.
+

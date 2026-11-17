@@ -50,7 +50,8 @@ if [ -n "${ENABLE_SSH:-}" ] && [ -x /usr/sbin/sshd ]; then
   chmod 700 "$HOME_DIR/.ssh"
   [ -f "$HOME_DIR/.ssh/authorized_keys" ] && chmod 600 "$HOME_DIR/.ssh/authorized_keys"
   chown -R "$USERNAME" "$HOME_DIR/.ssh"
-  cat > /etc/ssh/sshd_config.d/railway.conf <<CONF
+  # Standalone config so every distro behaves the same, whatever its default sshd_config looks like
+  cat > /etc/ssh/railway_sshd_config <<CONF
 Port 22
 HostKey /data/ssh/ssh_host_ed25519_key
 HostKey /data/ssh/ssh_host_ecdsa_key
@@ -58,9 +59,11 @@ HostKey /data/ssh/ssh_host_rsa_key
 PermitRootLogin no
 PasswordAuthentication ${SSH_PASSWORD_LOGIN:-yes}
 KbdInteractiveAuthentication no
+PubkeyAuthentication yes
 AllowUsers $USERNAME
+Subsystem sftp internal-sftp
 CONF
-  /usr/sbin/sshd -e
+  /usr/sbin/sshd -e -f /etc/ssh/railway_sshd_config
 fi
 
 exec ttyd --writable --port "$PORT" \

@@ -6,6 +6,8 @@ TTYD_SHA = "8a217c968aba172e0dbf3f34447218dc015bc4d5e59bf51db2f2cd12b7be4f55"
 COMMON = "bash sudo tmux curl wget git vim nano htop less unzip ca-certificates tzdata"
 
 DISTROS = {
+    "ubuntu-22.04": ("ubuntu:22.04", "Ubuntu 22.04 LTS", "apt",
+                     f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils build-essential && rm -rf /var/lib/apt/lists/*"),
     "ubuntu-24.04": ("ubuntu:24.04", "Ubuntu 24.04 LTS", "apt",
                      f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils build-essential && rm -rf /var/lib/apt/lists/* && userdel -r ubuntu 2>/dev/null || true"),
     "ubuntu-26.04": ("ubuntu:26.04", "Ubuntu 26.04 LTS", "apt",
@@ -34,11 +36,20 @@ VARIANTS = {
     "ubuntu-26.04-ssh": ("ubuntu-26.04", False),
     "debian-13-ssh": ("debian-13", False),
     "kali-ssh": ("kali", False),
+    "ubuntu-22.04-ssh": ("ubuntu-22.04", False),
+    "fedora-ssh": ("fedora", False),
+    "arch-ssh": ("arch", False),
+    "alpine-ssh": ("alpine", False),
+    "rocky-9-ssh": ("rocky-9", False),
+    "almalinux-10-ssh": ("almalinux-10", False),
+    "opensuse-ssh": ("opensuse", False),
     "ubuntu-24.04-ai": ("ubuntu-24.04", True),
     "debian-13-ai": ("debian-13", True),
 }
 NODE = "https://nodejs.org/dist/v24.22.3/node-v24.22.3-linux-x64.tar.xz"
 NODE_SHA = "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+SSH_PKGS = {"apt": "openssh-server xz-utils", "apk": "openssh-server", "dnf": "openssh-server",
+            "pacman": "openssh", "zypper": "openssh-server"}
 AI_CLIS = "@anthropic-ai/claude-code @openai/codex @google/gemini-cli"
 
 HINT = {"apt": "sudo apt update && sudo apt install -y <package>", "apk": "sudo apk add <package>",
@@ -62,7 +73,7 @@ def build(key):
                 + ("  Coding agents:  claude  |  codex  |  gemini   (sign in with your own account)\n" if ai else "")
                 + "\n")
     if ssh:
-        install = install.replace(COMMON, COMMON + " openssh-server xz-utils", 1)
+        install = install.replace(" tmux ", f" tmux {SSH_PKGS[pm]} ", 1)
         label += " + SSH"
     extra = ""
     if ai:

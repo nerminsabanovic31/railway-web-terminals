@@ -4,6 +4,7 @@ Password-protected Linux terminals that run on Railway and open in any browser. 
 
 | Folder | Base image |
 | --- | --- |
+| `ubuntu-22.04` | ubuntu:22.04 |
 | `ubuntu-24.04` | ubuntu:24.04 |
 | `ubuntu-26.04` | ubuntu:26.04 |
 | `debian-13` | debian:trixie |
@@ -18,6 +19,13 @@ Password-protected Linux terminals that run on Railway and open in any browser. 
 | `ubuntu-26.04-ssh` | ubuntu:26.04, plus an SSH server |
 | `debian-13-ssh` | debian:trixie, plus an SSH server |
 | `kali-ssh` | kalilinux/kali-rolling, plus an SSH server |
+| `ubuntu-22.04-ssh` | ubuntu:22.04, plus an SSH server |
+| `fedora-ssh` | fedora:43, plus an SSH server |
+| `arch-ssh` | archlinux, plus an SSH server |
+| `alpine-ssh` | alpine:3.22, plus an SSH server |
+| `rocky-9-ssh` | rockylinux:9, plus an SSH server |
+| `almalinux-10-ssh` | almalinux:10, plus an SSH server |
+| `opensuse-ssh` | opensuse/tumbleweed, plus an SSH server |
 | `ubuntu-24.04-ai` | ubuntu:24.04, SSH, Node.js 24, Claude Code, Codex CLI and Gemini CLI |
 | `debian-13-ai` | debian:trixie, SSH, Node.js 24, Claude Code, Codex CLI and Gemini CLI |
 
