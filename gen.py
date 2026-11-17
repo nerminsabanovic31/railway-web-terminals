@@ -28,13 +28,28 @@ DISTROS = {
                  f"zypper --non-interactive install {COMMON.replace('tzdata', 'timezone')} python3 python3-pip openssh-clients procps iputils bind-utils gcc make shadow && zypper clean -a"),
 }
 
+# SSH variants add sshd (reached through a Railway TCP proxy); AI variants also add Node.js and coding agent CLIs
+VARIANTS = {
+    "ubuntu-24.04-ssh": ("ubuntu-24.04", False),
+    "ubuntu-26.04-ssh": ("ubuntu-26.04", False),
+    "debian-13-ssh": ("debian-13", False),
+    "kali-ssh": ("kali", False),
+    "ubuntu-24.04-ai": ("ubuntu-24.04", True),
+    "debian-13-ai": ("debian-13", True),
+}
+NODE = "https://nodejs.org/dist/v24.22.3/node-v24.22.3-linux-x64.tar.xz"
+NODE_SHA = "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
+AI_CLIS = "@anthropic-ai/claude-code @openai/codex @google/gemini-cli"
+
 HINT = {"apt": "sudo apt update && sudo apt install -y <package>", "apk": "sudo apk add <package>",
         "dnf": "sudo dnf install -y <package>", "pacman": "sudo pacman -S <package>",
         "zypper": "sudo zypper install <package>"}
 
 
 def build(key):
-    image, label, pm, install = DISTROS[key]
+    base, ai = VARIANTS.get(key, (key, None))
+    image, label, pm, install = DISTROS[base]
+    ssh = ai is not None
     d = os.path.join(os.path.dirname(os.path.abspath(__file__)), key)
     os.makedirs(d, exist_ok=True)
     shutil.copy("entrypoint.sh", os.path.join(d, "entrypoint.sh"))
@@ -42,13 +57,26 @@ def build(key):
         f.write(f"\n  {label} web terminal\n"
                 f"  Install software:  {HINT[pm]}\n"
                 "  Your files in this home folder survive restarts and redeploys.\n"
-                "  tmux keeps your session alive: close the tab and come back any time.\n\n")
+                "  tmux keeps your session alive: close the tab and come back any time.\n"
+                + ("  Over SSH, run  tmux attach -t main  to join the browser session.\n" if ssh else "")
+                + ("  Coding agents:  claude  |  codex  |  gemini   (sign in with your own account)\n" if ai else "")
+                + "\n")
+    if ssh:
+        install = install.replace(COMMON, COMMON + " openssh-server xz-utils", 1)
+        label += " + SSH"
+    extra = ""
+    if ai:
+        label = label.replace(" + SSH", " AI Coding Box")
+        extra = (f"RUN curl -fsSL -o /tmp/node.tar.xz {NODE} \\\n"
+                 f" && echo \"{NODE_SHA}  /tmp/node.tar.xz\" | sha256sum -c - \\\n"
+                 " && tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 && rm /tmp/node.tar.xz \\\n"
+                 f" && npm install -g {AI_CLIS} && npm cache clean --force\n")
     with open(os.path.join(d, "Dockerfile"), "w") as f:
         f.write(f"""FROM {image}
 
-ENV TERMINAL_TITLE="{label}"
+ENV TERMINAL_TITLE="{label}"{chr(10) + "ENV ENABLE_SSH=1" if ssh else ""}
 RUN {install}
-RUN curl -fsSL -o /usr/local/bin/ttyd {TTYD} \\
+{extra}RUN curl -fsSL -o /usr/local/bin/ttyd {TTYD} \\
  && echo "{TTYD_SHA}  /usr/local/bin/ttyd" | sha256sum -c - \\
  && chmod +x /usr/local/bin/ttyd
 
@@ -56,12 +84,12 @@ COPY motd /etc/motd
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-EXPOSE 7681
+EXPOSE 7681{" 22" if ssh else ""}
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 """)
 
 
 if __name__ == "__main__":
-    for k in DISTROS:
+    for k in [*DISTROS, *VARIANTS]:
         build(k)
-    print(" ".join(DISTROS))
+    print(" ".join([*DISTROS, *VARIANTS]))

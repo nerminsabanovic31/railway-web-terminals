@@ -36,6 +36,33 @@ chown -R "$USERNAME" "$HOME_DIR" 2>/dev/null || true
 
 [ -n "${TZ:-}" ] && [ -f "/usr/share/zoneinfo/$TZ" ] && ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
 
+# SSH images only: sshd on port 22 (Railway TCP proxy), same user and password, host keys kept on the volume
+if [ -n "${ENABLE_SSH:-}" ] && [ -x /usr/sbin/sshd ]; then
+  mkdir -p /data/ssh /run/sshd
+  for t in rsa ecdsa ed25519; do
+    [ -f "/data/ssh/ssh_host_${t}_key" ] || ssh-keygen -q -t "$t" -N '' -f "/data/ssh/ssh_host_${t}_key"
+  done
+  echo "$USERNAME:$PASSWORD" | chpasswd
+  mkdir -p "$HOME_DIR/.ssh"
+  if [ -n "${AUTHORIZED_KEYS:-}" ]; then
+    printf '%s\n' "$AUTHORIZED_KEYS" > "$HOME_DIR/.ssh/authorized_keys"
+  fi
+  chmod 700 "$HOME_DIR/.ssh"
+  [ -f "$HOME_DIR/.ssh/authorized_keys" ] && chmod 600 "$HOME_DIR/.ssh/authorized_keys"
+  chown -R "$USERNAME" "$HOME_DIR/.ssh"
+  cat > /etc/ssh/sshd_config.d/railway.conf <<CONF
+Port 22
+HostKey /data/ssh/ssh_host_ed25519_key
+HostKey /data/ssh/ssh_host_ecdsa_key
+HostKey /data/ssh/ssh_host_rsa_key
+PermitRootLogin no
+PasswordAuthentication ${SSH_PASSWORD_LOGIN:-yes}
+KbdInteractiveAuthentication no
+AllowUsers $USERNAME
+CONF
+  /usr/sbin/sshd -e
+fi
+
 exec ttyd --writable --port "$PORT" \
   --credential "$USERNAME:$PASSWORD" \
   --client-option fontSize=15 \
