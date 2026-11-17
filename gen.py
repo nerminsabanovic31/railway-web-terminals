@@ -50,7 +50,7 @@ NODE = "https://nodejs.org/dist/v24.22.3/node-v24.22.3-linux-x64.tar.xz"
 NODE_SHA = "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb"
 SSH_PKGS = {"apt": "openssh-server xz-utils", "apk": "openssh-server", "dnf": "openssh-server",
             "pacman": "openssh", "zypper": "openssh-server"}
-AI_CLIS = "@anthropic-ai/claude-code @openai/codex @google/gemini-cli"
+AI_CLIS = "@anthropic-ai/claude-code @openai/codex @google/gemini-cli opencode-ai"
 
 HINT = {"apt": "sudo apt update && sudo apt install -y <package>", "apk": "sudo apk add <package>",
         "dnf": "sudo dnf install -y <package>", "pacman": "sudo pacman -S <package>",
@@ -70,7 +70,7 @@ def build(key):
                 "  Your files in this home folder survive restarts and redeploys.\n"
                 "  tmux keeps your session alive: close the tab and come back any time.\n"
                 + ("  Over SSH, run  tmux attach -t main  to join the browser session.\n" if ssh else "")
-                + ("  Coding agents:  claude  |  codex  |  gemini   (sign in with your own account)\n" if ai else "")
+                + ("  Coding agents:  claude  |  codex  |  gemini  |  opencode   (sign in with your own account)\n" if ai else "")
                 + "\n")
     if ssh:
         install = install.replace(" tmux ", f" tmux {SSH_PKGS[pm]} ", 1)

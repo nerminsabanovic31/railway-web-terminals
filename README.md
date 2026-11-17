@@ -26,8 +26,8 @@ Password-protected Linux terminals that run on Railway and open in any browser. 
 | `rocky-9-ssh` | rockylinux:9, plus an SSH server |
 | `almalinux-10-ssh` | almalinux:10, plus an SSH server |
 | `opensuse-ssh` | opensuse/tumbleweed, plus an SSH server |
-| `ubuntu-24.04-ai` | ubuntu:24.04, SSH, Node.js 24, Claude Code, Codex CLI and Gemini CLI |
-| `debian-13-ai` | debian:trixie, SSH, Node.js 24, Claude Code, Codex CLI and Gemini CLI |
+| `ubuntu-24.04-ai` | ubuntu:24.04, SSH, Node.js 24, Claude Code, Codex CLI, Gemini CLI and OpenCode |
+| `debian-13-ai` | debian:trixie, SSH, Node.js 24, Claude Code, Codex CLI, Gemini CLI and OpenCode |
 
 Every image runs [ttyd](https://github.com/tsl0922/ttyd) with HTTP basic auth and a persistent `tmux` session. The login user has passwordless sudo and its home folder lives on a Railway volume at `/data`, so files survive restarts and redeploys.
 
