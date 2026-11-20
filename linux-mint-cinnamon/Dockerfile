@@ -22,7 +22,7 @@ RUN echo "deb http://packages.linuxmint.com zena main upstream import backport" 
        cinnamon cinnamon-session cinnamon-control-center cinnamon-settings-daemon nemo nemo-fileroller \
        mint-common mint-info-cinnamon mint-artwork mint-themes mint-x-icons mint-y-icons mint-cursor-themes \
        fonts-ubuntu gnome-terminal xed xviewer xreader file-roller gvfs librsvg2-common \
-       xdg-user-dirs dbus-x11 zip unzip firefox \
+       xdg-user-dirs dbus-x11 zip unzip firefox libgl1-mesa-dri mesa-utils \
   && grep -q '^NAME="Linux Mint"' /etc/os-release \
   && rm -f /etc/xdg/autostart/cinnamon-screensaver.desktop /etc/xdg/autostart/xscreensaver.desktop \
   && apt-get autoclean \

@@ -1,3 +1,4 @@
 #!/bin/bash
 # No GPU in the cloud, so start Cinnamon's software rendering session
-exec dbus-launch --exit-with-session cinnamon-session --session cinnamon2d > /dev/null 2>&1
+export LIBGL_ALWAYS_SOFTWARE=1
+exec dbus-launch --exit-with-session cinnamon-session --session cinnamon2d
