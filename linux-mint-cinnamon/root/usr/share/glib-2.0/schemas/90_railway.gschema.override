@@ -1,0 +1,13 @@
+# A cloud desktop sits behind the web login, so no lock screen or blanking
+[org.cinnamon.desktop.screensaver]
+lock-enabled=false
+
+[org.cinnamon.desktop.session]
+idle-delay=uint32 0
+
+[org.cinnamon.settings-daemon.plugins.power]
+sleep-display-ac=0
+sleep-inactive-ac-timeout=0
+
+[org.cinnamon.desktop.interface]
+enable-animations=false
