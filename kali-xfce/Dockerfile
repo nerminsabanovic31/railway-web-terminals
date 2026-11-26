@@ -13,13 +13,13 @@ RUN apt-get update \
        xfce4-terminal xfce4-notifyd xfce4-taskmanager xfce4-screenshooter libxfce4ui-utils \
        thunar thunar-archive-plugin tumbler gvfs mousepad ristretto xarchiver \
        kali-themes kali-desktop-base kali-menu kali-tools-top10 \
-       firefox-esr dbus-x11 xdg-user-dirs zip unzip 7zip \
+       firefox-esr dbus-x11 x11-xserver-utils xdg-user-dirs zip unzip 7zip \
   && rm -f /etc/xdg/autostart/xscreensaver.desktop /etc/xdg/autostart/light-locker.desktop \
        /etc/xdg/autostart/xfce4-power-manager.desktop \
   && apt-get autoclean \
   && rm -rf /config/.cache /var/lib/apt/lists/* /var/tmp/* /tmp/*
 
 COPY root/ /
-RUN chmod +x /defaults/startwm.sh
+RUN chmod +x /defaults/startwm.sh /usr/local/bin/kali-wallpaper
 
 EXPOSE 3000

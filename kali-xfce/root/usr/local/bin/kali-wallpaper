@@ -1,0 +1,17 @@
+#!/bin/bash
+# First login only: put Kali's wallpaper on every monitor of the cloud desktop
+[ -f "${HOME}/.config/railway-wallpaper-set" ] && exit 0
+sleep 4
+img=""
+for f in /usr/share/images/desktop-base/desktop-background /usr/share/backgrounds/kali/*16x9*.png \
+         /usr/share/backgrounds/kali/*.png /usr/share/backgrounds/kali/*.jpg; do
+  [ -e "$f" ] && img="$f" && break
+done
+[ -z "$img" ] && exit 0
+props=$(xfconf-query -c xfce4-desktop -l | grep last-image)
+[ -z "$props" ] && props=$(xrandr --listmonitors | awk 'NR>1{print "/backdrop/screen0/monitor"$4"/workspace0/last-image"}')
+for p in $props; do
+  xfconf-query -c xfce4-desktop -p "$p" -n -t string -s "$img"
+  xfconf-query -c xfce4-desktop -p "${p%last-image}image-style" -n -t int -s 5
+done
+touch "${HOME}/.config/railway-wallpaper-set"

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Kali wallpaper
+Exec=/usr/local/bin/kali-wallpaper
+OnlyShowIn=XFCE;
+NoDisplay=true
