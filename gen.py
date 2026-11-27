@@ -17,7 +17,7 @@ DISTROS = {
     "debian-13": ("debian:trixie", "Debian 13 (trixie)", "apt",
                   f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils build-essential && rm -rf /var/lib/apt/lists/*"),
     "kali": ("kalilinux/kali-rolling:latest", "Kali Linux (rolling)", "apt",
-             f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils nmap whois netcat-traditional {KALI_TOOLS} && rm -rf /var/lib/apt/lists/*"),
+             f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils nmap whois netcat-traditional {KALI_TOOLS} && rm -rf /var/lib/apt/lists/* && ln -sf /usr/sbin/john /usr/local/bin/john"),
     "alpine": ("alpine:3.22", "Alpine Linux 3.22", "apk",
                f"apk add --no-cache {COMMON} shadow python3 py3-pip openssh-client procps iputils bind-tools build-base"),
     "fedora": ("fedora:43", "Fedora 43", "dnf",
