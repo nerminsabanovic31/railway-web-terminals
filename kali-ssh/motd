@@ -3,5 +3,6 @@
   Install software:  sudo apt update && sudo apt install -y <package>
   Your files in this home folder survive restarts and redeploys.
   tmux keeps your session alive: close the tab and come back any time.
+  Tools: nmap  sqlmap  ffuf  gobuster  hydra  nikto  john  whatweb  dirb   (wordlists in /usr/share/wordlists)
   Over SSH, run  tmux attach -t main  to join the browser session.
 

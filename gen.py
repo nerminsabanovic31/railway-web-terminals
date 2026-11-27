@@ -4,6 +4,8 @@ import os, shutil
 TTYD = "https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64"
 TTYD_SHA = "8a217c968aba172e0dbf3f34447218dc015bc4d5e59bf51db2f2cd12b7be4f55"
 COMMON = "bash sudo tmux curl wget git vim nano htop less unzip ca-certificates tzdata"
+# Pentest set for the Kali terminals (Metasploit and Burp are left out: too big for a quick build)
+KALI_TOOLS = "sqlmap ffuf gobuster hydra nikto john hashid whatweb dirb wordlists"
 
 DISTROS = {
     "ubuntu-22.04": ("ubuntu:22.04", "Ubuntu 22.04 LTS", "apt",
@@ -15,7 +17,7 @@ DISTROS = {
     "debian-13": ("debian:trixie", "Debian 13 (trixie)", "apt",
                   f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils build-essential && rm -rf /var/lib/apt/lists/*"),
     "kali": ("kalilinux/kali-rolling:latest", "Kali Linux (rolling)", "apt",
-             f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils nmap whois netcat-traditional && rm -rf /var/lib/apt/lists/*"),
+             f"apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends {COMMON} python3 python3-pip openssh-client procps iputils-ping dnsutils nmap whois netcat-traditional {KALI_TOOLS} && rm -rf /var/lib/apt/lists/*"),
     "alpine": ("alpine:3.22", "Alpine Linux 3.22", "apk",
                f"apk add --no-cache {COMMON} shadow python3 py3-pip openssh-client procps iputils bind-tools build-base"),
     "fedora": ("fedora:43", "Fedora 43", "dnf",
@@ -69,6 +71,7 @@ def build(key):
                 f"  Install software:  {HINT[pm]}\n"
                 "  Your files in this home folder survive restarts and redeploys.\n"
                 "  tmux keeps your session alive: close the tab and come back any time.\n"
+                + ("  Tools: nmap  sqlmap  ffuf  gobuster  hydra  nikto  john  whatweb  dirb   (wordlists in /usr/share/wordlists)\n" if base == "kali" else "")
                 + ("  Over SSH, run  tmux attach -t main  to join the browser session.\n" if ssh else "")
                 + ("  Coding agents:  claude  |  codex  |  gemini  |  opencode   (sign in with your own account)\n" if ai else "")
                 + "\n")
